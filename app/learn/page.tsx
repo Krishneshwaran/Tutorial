@@ -1,11 +1,14 @@
-import Link from "next/link"
-import { ArrowRight, BookOpen, FileCode2 } from "lucide-react"
+"use client";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { MainHeader } from "@/components/main-header"
-import { Badge } from "@/components/ui/badge"
-import { Progress } from "@/components/ui/progress"
+import Link from "next/link";
+import { ArrowRight, BookOpen, FileCode2 } from "lucide-react";
+import { useState } from "react";
+
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { MainHeader } from "@/components/main-header";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 
 // Sample data for learning paths
 const learningPaths = [
@@ -33,7 +36,7 @@ const learningPaths = [
     hours: 40,
     image: "/placeholder.svg?height=100&width=200",
   },
-]
+];
 
 // Sample data for technologies
 const technologies = [
@@ -45,7 +48,7 @@ const technologies = [
   { name: "React", icon: FileCode2, color: "bg-cyan-500", lessons: 36, href: "/learn/react" },
   { name: "Node.js", icon: FileCode2, color: "bg-green-600", lessons: 30, href: "/learn/nodejs" },
   { name: "Git", icon: FileCode2, color: "bg-orange-600", lessons: 18, href: "/learn/git" },
-]
+];
 
 // Sample data for recommended lessons
 const recommendedLessons = [
@@ -77,9 +80,23 @@ const recommendedLessons = [
     duration: "30 min",
     href: "/learn/sql/joins",
   },
-]
+];
 
 export default function LearnPage() {
+  const [concept, setConcept] = useState<string | null>(null);
+
+  const handleClick = (tech: string) => {
+    const concepts: Record<string, string> = {
+      HTML: "HTML is the standard markup language for creating web pages.",
+      CSS: "CSS is used to style and layout web pages.",
+      JavaScript: "JavaScript is a programming language that makes web pages interactive.",
+    };
+
+    if (concepts[tech]) {
+      setConcept(concepts[tech]);
+    }
+  };
+
   return (
     <div className="flex min-h-screen flex-col">
       <MainHeader />
@@ -168,6 +185,7 @@ export default function LearnPage() {
                   key={tech.name}
                   href={tech.href}
                   className="group flex flex-col rounded-lg border bg-background p-4 transition-colors hover:bg-muted/50"
+                  onClick={() => handleClick(tech.name)}
                 >
                   <div className="mb-3 flex items-center gap-3">
                     <div className={`flex h-10 w-10 items-center justify-center rounded-full ${tech.color}`}>
@@ -228,8 +246,17 @@ export default function LearnPage() {
             ))}
           </div>
         </section>
+
+        {/* Concept Display */}
+        {concept && (
+          <section className="container px-4 py-12 md:px-6">
+            <div className="bg-muted/50 p-6 rounded-lg shadow-md">
+              <h2 className="text-xl font-bold mb-2">Concept to Study</h2>
+              <p className="text-muted-foreground">{concept}</p>
+            </div>
+          </section>
+        )}
       </main>
     </div>
-  )
+  );
 }
-
